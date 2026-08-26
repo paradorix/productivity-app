@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Fonts — self-hosted, no network calls. The originals were pulled
+   from Google Fonts via @import; bundling them keeps the app working
+   offline and stops a third party seeing who loads the page.
+   --------------------------------------------------------------- */
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("/fonts/PressStart2P-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Pixelify Sans";
+  src: url("/fonts/PixelifySans-Variable.ttf") format("truetype-variations");
+  font-weight: 400 700;
+  font-display: block;
+}
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/Silkscreen-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/Silkscreen-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: block;
+}
+
+/* ---------------------------------------------------------------
+   Palette — ported 1:1 from VColor.swift, which in turn came from
+   the original design-source/tokens/colors.css.
+   --------------------------------------------------------------- */
+:root {
+  --butter-100: #fcefc4;
+  --butter-200: #f9e5a0;
+  --butter-400: #f5d877;
+  --butter-600: #e0bd52;
+  --butter-700: #c9a23c;
+
+  --brown-300: #b08160;
+  --brown-500: #8b5a38;
+  --brown-700: #6b4226;
+  --brown-800: #54331d;
+  --brown-900: #3e2513;
+
+  --cream-50: #fff6e0;
+  --cream-100: #fcefd0;
+  --cream-200: #f7e4bc;
+
+  --rust-300: #c98f7f;
+  --rust-400: #bc7563;
+  --rust-500: #a85c4b;
+  --rust-600: #8f4b3c;
+  --rust-700: #7d4236;
+
+  --sage-400: #9caf7c;
+  --sage-600: #7a9159;
+  --sky-300: #afc8cc;
+  --sky-500: #7fa8ae;
+
+  /* Semantic surfaces */
+  --surface-app: var(--butter-400);
+  --surface-app-alt: var(--butter-200);
+  --surface-card: var(--cream-50);
+  --surface-screen: var(--cream-100);
+  --surface-screen-alt: var(--cream-200);
+  --surface-inset: var(--butter-100);
+
+  /* Borders */
+  --border-primary: var(--brown-700);
+  --border-primary-strong: var(--brown-900);
+  --border-subtle: var(--brown-300);
+
+  /* Text */
+  --text-primary: var(--brown-900);
+  --text-secondary: var(--brown-700);
+  --text-muted: var(--brown-500);
+  --text-on-accent: var(--cream-50);
+  --text-on-fill: var(--brown-900);
+
+  /* Accent + fill */
+  --accent-primary: var(--rust-500);
+  --accent-primary-hover: var(--rust-400);
+  --accent-primary-active: var(--rust-700);
+  --fill-primary: var(--butter-400);
+  --fill-primary-hover: var(--butter-200);
+  --fill-primary-active: var(--butter-600);
+
+  /* Status */
+  --status-positive: var(--sage-600);
+  --status-info: var(--sky-500);
+  --status-warning: var(--rust-500);
+
+  /* Borders / radius / motion — every radius is 0, no exceptions. */
+  --border-thin: 2px;
+  --border-md: 3px;
+  --border-thick: 4px;
+  --border-xthick: 6px;
+  --radius-all: 0;
+  --duration-fast: 60ms;
+  --duration-normal: 120ms;
+  --duration-bounce: 180ms;
+}
+
+@theme inline {
+  --color-butter-100: var(--butter-100);
+  --color-butter-200: var(--butter-200);
+  --color-butter-400: var(--butter-400);
+  --color-butter-600: var(--butter-600);
+  --color-butter-700: var(--butter-700);
+  --color-brown-300: var(--brown-300);
+  --color-brown-500: var(--brown-500);
+  --color-brown-700: var(--brown-700);
+  --color-brown-800: var(--brown-800);
+  --color-brown-900: var(--brown-900);
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-cream-200: var(--cream-200);
+  --color-rust-300: var(--rust-300);
+  --color-rust-400: var(--rust-400);
+  --color-rust-500: var(--rust-500);
+  --color-rust-600: var(--rust-600);
+  --color-rust-700: var(--rust-700);
+  --color-sage-400: var(--sage-400);
+  --color-sage-600: var(--sage-600);
+  --color-sky-300: var(--sky-300);
+  --color-sky-500: var(--sky-500);
+
+  --color-surface-app: var(--surface-app);
+  --color-surface-card: var(--surface-card);
+  --color-surface-screen: var(--surface-screen);
+  --color-surface-inset: var(--surface-inset);
+  --color-accent: var(--accent-primary);
+  --color-ink: var(--text-primary);
+  --color-ink-soft: var(--text-secondary);
+  --color-ink-muted: var(--text-muted);
+
+  --font-display: "Press Start 2P", monospace;
+  --font-body: "Pixelify Sans", system-ui, sans-serif;
+  --font-pixel: "Silkscreen", monospace;
+
+  --radius-none: 0;
+}
+
+/* ---------------------------------------------------------------
+   Base
+   --------------------------------------------------------------- */
+html {
+  background: var(--surface-app);
+}
+
+body {
+  background: var(--surface-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Pixel art must never be smoothed by the browser's scaler. */
+img[data-pixel] {
+  image-rendering: pixelated;
+}
+
+/* Square corners everywhere — the design system has no rounded anything. */
+* {
+  border-radius: 0;
+}
+
+::selection {
+  background: var(--accent-primary);
+  color: var(--cream-50);
+}
+
+/* ---------------------------------------------------------------
+   Effects — hard offset shadows (zero blur) and Win95 inset bevels.
+   These were faked with stacked rectangles in SwiftUI; in CSS they
+   are just box-shadows.
+   --------------------------------------------------------------- */
+@utility chunky-sm { box-shadow: 2px 2px 0 0 var(--brown-900); }
+@utility chunky-md { box-shadow: 4px 4px 0 0 var(--brown-900); }
+@utility chunky-lg { box-shadow: 6px 6px 0 0 var(--brown-900); }
+@utility chunky-none { box-shadow: none; }
+
+@utility bevel {
+  box-shadow:
+    inset var(--border-thin) var(--border-thin) 0 0 rgb(255 246 224 / 0.65),
+    inset calc(-1 * var(--border-thin)) calc(-1 * var(--border-thin)) 0 0 rgb(62 37 19 / 0.32);
+}
+
+@utility bevel-pressed {
+  box-shadow:
+    inset var(--border-thin) var(--border-thin) 0 0 rgb(62 37 19 / 0.65),
+    inset calc(-1 * var(--border-thin)) calc(-1 * var(--border-thin)) 0 0 rgb(255 246 224 / 0.5);
+}
+
+/* Focus ring that survives a square-cornered, high-contrast palette. */
+@utility focus-pixel {
+  outline: var(--border-md) solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+:focus-visible {
+  outline: var(--border-md) solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
