@@ -26,7 +26,12 @@ import {
  */
 
 export const BACKUP_FORMAT = "productivity-app-backup";
-export const BACKUP_VERSION = 1;
+/**
+ * Version 2 adds `createdAt` to workout sessions and food entries — a calendar
+ * day can't order two things logged on the same day. Version 1 files are still
+ * read: the field is optional on the way in and backfilled from the day.
+ */
+export const BACKUP_VERSION = 2;
 
 const photoSchema = z
   .object({ mime: z.string(), data: z.string() })
@@ -76,6 +81,7 @@ const backupSchema = z.object({
         day: dayKey,
         weekday: z.number().int().min(1).max(7).nullable(),
         isFreeform: z.boolean(),
+        createdAt: z.string().optional(),
         exercises: z.array(
           z.object({
             id: z.string(),
@@ -108,6 +114,7 @@ const backupSchema = z.object({
         mealType: z.enum(MEAL_TYPES),
         text: z.string(),
         photo: photoSchema,
+        createdAt: z.string().optional(),
       }),
     ),
   }),
@@ -218,10 +225,21 @@ export async function restoreBackup(fileText: string): Promise<{ counts: Record<
   }
 
   const { data } = parsed.data;
+  // A version-1 file has no `createdAt`; deriving it from the day keeps the
+  // ordering stable and deterministic rather than stamping "now" on old data.
+  const startOfDay = (day: string) => `${day}T00:00:00.000Z`;
+
   const journal: JournalEntry[] = data.journal.map((e) => ({ ...e, photo: photoToBlob(e.photo) }));
-  const food: FoodLogEntry[] = data.food.map((e) => ({ ...e, photo: photoToBlob(e.photo) }));
+  const food: FoodLogEntry[] = data.food.map((e) => ({
+    ...e,
+    photo: photoToBlob(e.photo),
+    createdAt: e.createdAt ?? startOfDay(e.day),
+  }));
   const garden = data.garden as GardenPlant[];
-  const workouts = data.workouts as WorkoutSession[];
+  const workouts: WorkoutSession[] = data.workouts.map((w) => ({
+    ...w,
+    createdAt: w.createdAt ?? startOfDay(w.day),
+  })) as WorkoutSession[];
   const plan = data.plan as PlannedExercise[];
   const profile = data.profile as Profile | null;
 

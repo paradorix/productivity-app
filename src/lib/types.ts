@@ -69,6 +69,8 @@ export interface WorkoutSession {
   weekday: Weekday | null;
   isFreeform: boolean;
   exercises: LoggedExercise[];
+  /** Full timestamp. `day` alone can't order two sessions finished the same day. */
+  createdAt: string;
 }
 
 export interface PlannedExercise {
@@ -88,6 +90,8 @@ export interface FoodLogEntry {
   mealType: MealType;
   text: string;
   photo: Blob | null;
+  /** Full timestamp, so a day's meals list in the order they were logged. */
+  createdAt: string;
 }
 
 export interface Profile {
