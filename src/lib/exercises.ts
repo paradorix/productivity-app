@@ -23,7 +23,9 @@ let inFlight: Promise<ExerciseDefinition[]> | null = null;
 export async function loadExercises(): Promise<ExerciseDefinition[]> {
   if (cache) return cache;
   // Concurrent callers (the browser sheet and the name field) share one fetch.
-  inFlight ??= fetch("/data/exercises.json")
+  // Next rewrites `next/image` sources and `Link` hrefs for a base path, but
+  // it cannot rewrite a URL inside a fetch call — that prefix is ours to add.
+  inFlight ??= fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/data/exercises.json`)
     .then((response) => {
       if (!response.ok) throw new Error(`exercise list responded ${response.status}`);
       return response.json() as Promise<ExerciseDefinition[]>;

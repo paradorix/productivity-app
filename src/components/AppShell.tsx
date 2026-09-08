@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { db } from "@/lib/db";
+import { normalizePath } from "@/lib/cn";
 import { Onboarding } from "./Onboarding";
 import { TabBar } from "./TabBar";
 
@@ -43,7 +44,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   // user never sees the app flash past before the welcome screen.
   if (!ready) return null;
 
-  const showTabBar = onboarded && pathname !== "/settings";
+  // A static host may serve "/settings/" rather than "/settings"; comparing
+  // the raw string would then quietly show the tab bar on a screen that hides
+  // it deliberately.
+  const showTabBar = onboarded && normalizePath(pathname) !== "/settings";
 
   return (
     <div className="min-h-dvh flex items-center justify-center p-0 sm:p-8">

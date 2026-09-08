@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/cn";
+import { cn, normalizePath } from "@/lib/cn";
 
 /** Geometric glyph stand-ins, carried over from the original design. */
 export const TABS = [
@@ -21,7 +21,7 @@ export const TABS = [
  * where the browser gives us something SwiftUI charged for.
  */
 export function TabBar() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
 
   return (
     <nav
