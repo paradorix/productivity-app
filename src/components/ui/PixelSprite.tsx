@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { assetPath } from "@/lib/assets";
 
 /**
  * Renders one of the bundled pixel PNGs. `data-pixel` switches the browser to
@@ -22,7 +23,9 @@ export function PixelSprite({
 }) {
   return (
     <Image
-      src={`/sprites/${name}.png`}
+      // `unoptimized` means Next hands this src straight through, base path
+      // and all — so the prefix has to be applied here.
+      src={assetPath(`/sprites/${name}.png`)}
       alt={alt}
       width={size}
       height={height ?? size}

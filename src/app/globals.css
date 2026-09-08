@@ -4,31 +4,14 @@
    Fonts — self-hosted, no network calls. The originals were pulled
    from Google Fonts via @import; bundling them keeps the app working
    offline and stops a third party seeing who loads the page.
+
+   The @font-face rules themselves live in `app/layout.tsx`, not here.
+   A `url()` in CSS is emitted exactly as written, so on a host that
+   serves the app from a subdirectory these files would 404 and every
+   pixel font would silently fall back to the system stack. Building
+   the rules in TypeScript lets the base path be applied. See
+   `lib/assets.ts`.
    --------------------------------------------------------------- */
-@font-face {
-  font-family: "Press Start 2P";
-  src: url("/fonts/PressStart2P-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-display: block;
-}
-@font-face {
-  font-family: "Pixelify Sans";
-  src: url("/fonts/PixelifySans-Variable.ttf") format("truetype-variations");
-  font-weight: 400 700;
-  font-display: block;
-}
-@font-face {
-  font-family: "Silkscreen";
-  src: url("/fonts/Silkscreen-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-display: block;
-}
-@font-face {
-  font-family: "Silkscreen";
-  src: url("/fonts/Silkscreen-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-display: block;
-}
 
 /* ---------------------------------------------------------------
    Palette — ported 1:1 from VColor.swift, which in turn came from
